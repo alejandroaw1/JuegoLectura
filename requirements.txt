@@ -1,0 +1,4 @@
+pygame>=2.5
+pyttsx3>=2.90
+# opcional, solo para generar_audios.py:
+gTTS>=2.5
