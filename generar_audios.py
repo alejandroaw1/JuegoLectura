@@ -1,19 +1,23 @@
 """
-Genera los audios de las sílabas con voz sintética (requiere internet, una sola vez).
+Genera TODOS los audios que usa la versión 2 (vocales, consonantes, sílabas y palabras).
+Requiere internet una sola vez:
     pip install gTTS
     python generar_audios.py
-Los archivos quedan en assets/audio/ (ma.mp3, me.mp3, ...). El juego los usa automáticamente.
-Recomendación: reemplázalos después por grabaciones de una voz real (maestra o familiar),
-con el mismo nombre de archivo, porque las sílabas sueltas suenan más claras así.
+Los archivos quedan en assets/audio/ (a.mp3, m.mp3, ma.mp3, casa.mp3, ...).
+Solo crea los que faltan, así que no pisa los audios que ya tienes ni las grabaciones propias.
+
+Nota: para las letras sueltas la voz sintética dice el nombre de la letra ("eme").
+Si prefieres el sonido ("mmm"), graba tu propia voz con el mismo nombre de archivo.
 """
 import os
 from gtts import gTTS
-from juego import ETAPAS, AUDIO_DIR
+from juego_v2 import AUDIO_DIR, todos_los_audios
 
 os.makedirs(AUDIO_DIR, exist_ok=True)
-for etapa in ETAPAS:
-    for sil in etapa["silabas"]:
-        destino = os.path.join(AUDIO_DIR, f"{sil.lower()}.mp3")
-        if not os.path.exists(destino):
-            gTTS(sil.lower(), lang="es", tld="com.mx", slow=True).save(destino)
-            print("creado", destino)
+for nombre, texto in sorted(todos_los_audios().items()):
+    destino = os.path.join(AUDIO_DIR, f"{nombre}.mp3")
+    if os.path.exists(destino):
+        continue
+    gTTS(texto, lang="es", tld="com.mx", slow=len(texto) <= 3).save(destino)
+    print("creado", destino)
+print("Listo.")
